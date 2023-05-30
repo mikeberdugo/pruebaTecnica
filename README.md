@@ -11,5 +11,8 @@ INSERT INTO TipoTransporte (typeTransport) VALUES
   ('Marítima'),
   ('Terrestre');
   
+  esta aplicacion se desarrollo basado en MVC (Model-View-Controller) dado que no es una aplicacion muy compleja este modelo nos ayuda a mantener una separación clara de responsabilidades que permite una fácil extensibilidad y reutilización de código, tanto la vista , como el modelo y la aplicacion nos
+  permite que la aplicacion quede de mejor manera 
+  
   
 
