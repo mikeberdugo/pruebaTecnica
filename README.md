@@ -6,7 +6,7 @@ el siguente es un ejemplo de un sistema que debe registrar los datos básicos de
 
 
 
-## la primera instrucion que debemos hacer luego de cargar la base de datos es :
+### la primera instrucion que debemos hacer luego de cargar la base de datos es :
 
 INSERT INTO TipoTransporte (typeTransport) VALUES
   ('Marítima'),
