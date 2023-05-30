@@ -58,6 +58,8 @@
                 <th>Identificador del vehículo </th>
                 <th>Numero de guia </th>
                 <th>Descuento</th>
+                <th>Cliente</th>
+                <th>Tipo de transporte </th>
 
             </tr>
             {{ range . }}
@@ -71,6 +73,8 @@
                 <td>{{ .VehicleIdentifier }}</td>
                 <td>{{ .GuideNumber }}</td>
                 <td>{{ .Free }}</td>
+                <td>{{ .ClienteId }}</td>
+                <td>{{ .TipoTransporteId }}</td>
             </tr>
             {{ end }}
         </table>
