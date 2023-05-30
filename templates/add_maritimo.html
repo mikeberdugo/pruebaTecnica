@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>add</title>
+</head>
+<body>
+    <header>
+        <h1>gestión logística - Maritima</h1>
+    </header>
+    <div>
+        <a href="/">Volver al Inicio</a>
+    </div>
+        <a href="/visua">Ver pedidos </a>
+    <div>
+    
+    <main>
+        <form action="/add_maritimo" method="post">
+            <fieldset>
+                <legend>Rellene los campos de manera correcta </legend>
+                <div>
+                    <p>digite los datos correspondientes del cliente </p>
+
+                        <label for="name" >nombre del cliente </label>
+                        <input type= "text" placeholder="nombre " id="name" name="name" required ><br><br>
+
+                        <label for="ident">identiciacion de cliente</label>
+                        <input type= "text" placeholder="identificacion" id="ident" name="ident" required ><br><br>
+
+
+                        <label for="typeProduct">Tipo de producto</label>
+                        <input type= "text" placeholder="tipo de producto" id="typeProduct" name="typeProduct" required ><br><br>
+
+                        <label for="amount">Cantidad del producto</label>
+                        <input type= "number" placeholder="Cantidad    " id="amount" name="amount" min="0" max="99" required ><br><br>
+
+                        <label for="RegistrationDate">Fecha de registro</label>
+                        <input type= "date"  id="RegistrationDate" name="RegistrationDate" required><br><br>
+
+                        <label for="DateDelivery">Fecha de entrega</label>
+                        <input type= "date"  id="DateDelivery" name="DateDelivery" required><br><br>
+
+                        <label for="Store">Bodega de entrega</label>
+                        <input type= "text" placeholder="Bodega" id="Store" name="Store" required ><br><br>
+
+                        <label for="Price">Precio de envió</label>
+                        <input type= "text" placeholder="Precio" id="Price" name="Price" required ><br><br>
+                        
+                        <label for="VehicleIdentifier">Identificador del Vehivulo</label>
+                        <input type= "text" placeholder="Identificador del Vehivulo" id="VehicleIdentifier" name="VehicleIdentifier" required ><br><br>
+
+                        <label for="GuideNumber">Numero de guía</label>
+                        <input type= "text" placeholder="Numero de guía" id="GuideNumber" name="GuideNumber" required ><br><br>
+
+                        <input type="submit" value="Enviar"><br><br>
+                </div>
+            </fieldset>
+        </form>
+    </main>
+
+    <footer>
+        <p>todos los derechos reservados © </p>
+    </footer>
+</body>
+</html>

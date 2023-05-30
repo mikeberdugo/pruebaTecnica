@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>vistas</title>
+</head>
+<body>
+    <header>
+        <h1>gestión logística</h1>
+    </header>
+    
+    <div>
+        <a href="/">Volver al Inicio</a>
+    </div>
+
+    <div>
+        <a href="/add_maritimo">Adicionar Pedido Maritimo</a>
+    </div>
+    
+    <div>
+        <a href="/add_terrestre">Adicionar Pedido Terrestre</a>
+    </div>
+    <main>
+
+        <h1>Lista de usuarios</h1>
+
+        <style>
+            table {
+                border-collapse: collapse;
+                width: 100%;
+            }
+    
+            th, td {
+                padding: 4px;
+                text-align: left;
+                border: 4px solid #ddd;
+            }
+    
+            th {
+                background-color: #f2f2f2;
+            }
+    
+            tr:hover {
+                background-color: #f5f5f5;
+            }
+        </style>
+
+        <table>
+            <tr>
+                <th>Tipo de carga</th>
+                <th>Cantida del envio </th>
+                <th>Fecha de registro </th>
+                <th>Fecha de entrega </th>
+                <th>Bodega </th>
+                <th>Precio del envio </th>
+                <th>Identificador del vehículo </th>
+                <th>Numero de guia </th>
+                <th>Descuento</th>
+
+            </tr>
+            {{ range . }}
+            <tr>  
+                <td>{{ .TypeProduct }}</td>
+                <td>{{ .Amount }}</td>
+                <td>{{ .RegistrationDate }}</td>
+                <td>{{ .DateDelivery }}</td>
+                <td>{{ .Store }}</td>
+                <td>{{ .Price }}</td>
+                <td>{{ .VehicleIdentifier }}</td>
+                <td>{{ .GuideNumber }}</td>
+                <td>{{ .Free }}</td>
+            </tr>
+            {{ end }}
+        </table>
+
+    </main>
+
+    <footer>
+        <p>todos los derechos reservados © </p>
+    </footer>
+    
+</body>
+</html>
