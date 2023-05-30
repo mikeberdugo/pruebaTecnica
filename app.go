@@ -34,6 +34,20 @@ type envio struct {
 	Free              string
 }
 
+type envio2 struct {
+	TypeProduct       string
+	Amount            string
+	RegistrationDate  string
+	DateDelivery      string
+	Store             string
+	Price             string
+	VehicleIdentifier string
+	GuideNumber       string
+	Free              string
+	ClienteId         string
+	TipoTransporteId  string
+}
+
 func main() {
 	http.HandleFunc("/", index)
 	http.HandleFunc("/add_maritimo", add_maritimo)
@@ -52,17 +66,6 @@ func index(rw http.ResponseWriter, r *http.Request) {
 	} else {
 		template.Execute(rw, nil)
 	}
-}
-
-func visua(rw http.ResponseWriter, r *http.Request) {
-	template, err := template.ParseFiles("templates/visualize.html")
-
-	if err != nil {
-		panic(err)
-	} else {
-		template.Execute(rw, nil)
-	}
-
 }
 
 func add_terrestre(rw http.ResponseWriter, r *http.Request) {
@@ -130,6 +133,8 @@ func add_terrestre(rw http.ResponseWriter, r *http.Request) {
 			Free:              Free,
 		}
 
+		validateFields(cliente, envio)
+
 		err4 := saveFormDataWare(envio, cliente, 2)
 
 		if err4 != nil {
@@ -170,7 +175,7 @@ func add_maritimo(rw http.ResponseWriter, r *http.Request) {
 		GuideNumber := r.FormValue("GuideNumber")
 
 		///
-		match, _ := regexp.MatchString("^[a-zA-Z]{3}[0-9]{3}$", VehicleIdentifier)
+		match, _ := regexp.MatchString("^[a-zA-Z]{3}[0-9]{4}$", VehicleIdentifier)
 
 		if match == false {
 			http.Error(rw, "el identificador del vehículo  no es valido ", http.StatusInternalServerError)
@@ -210,6 +215,8 @@ func add_maritimo(rw http.ResponseWriter, r *http.Request) {
 			GuideNumber:       GuideNumber,
 			Free:              Free,
 		}
+
+		validateFields(cliente, envio)
 
 		err4 := saveFormDataWare(envio, cliente, 1)
 
@@ -303,6 +310,19 @@ func buscarIDPorValor(db *sql.DB, tabla string, columna string, valorBuscado str
 	return id, nil
 }
 
+func buscarPorValor(db *sql.DB, tabla string, columna string, valorBuscado int, columna2 string) (string, error) {
+	query := fmt.Sprintf("SELECT %s FROM %s WHERE %s = ?", columna2, tabla, columna)
+	var valor string
+	err := db.QueryRow(query, valorBuscado).Scan(&valor)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return "0", nil
+		}
+		return "0", err
+	}
+	return valor, nil
+}
+
 func getUsers(w http.ResponseWriter, r *http.Request) {
 	//// variables auciliares para reistro de la id
 	var IDPedido int
@@ -322,20 +342,7 @@ func getUsers(w http.ResponseWriter, r *http.Request) {
 	}
 	defer rows.Close()
 
-	// Crear una lista de clientes
-	users := []User{}
-	for rows.Next() {
-		var user User
-		err := rows.Scan(&user.ID, &user.Name, &user.Ident)
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
-		}
-		users = append(users, user)
-	}
-
 	// añade a la lista el plan de entrega
-
 	rows, err = db.Query("SELECT * FROM planentrega ")
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -343,15 +350,30 @@ func getUsers(w http.ResponseWriter, r *http.Request) {
 	}
 	defer rows.Close()
 
-	envios := []envio{}
+	envios := []envio2{}
 	for rows.Next() {
-		var envio envio
-		err := rows.Scan(&IDPedido, &envio.TypeProduct, &envio.Amount, &envio.RegistrationDate, &envio.DateDelivery, &envio.Store, &envio.Price, &envio.VehicleIdentifier, &envio.GuideNumber, &envio.Free, &Aux1, &Aux2)
+		var envio2 envio2
+		err := rows.Scan(&IDPedido, &envio2.TypeProduct, &envio2.Amount, &envio2.RegistrationDate, &envio2.DateDelivery, &envio2.Store, &envio2.Price, &envio2.VehicleIdentifier, &envio2.GuideNumber, &envio2.Free, &Aux1, &Aux2)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
-		envios = append(envios, envio)
+		id, err := buscarPorValor(db, "cliente", "Id", Aux1, "NameClient")
+
+		if err != nil {
+			return
+		}
+		envio2.ClienteId = id
+
+		id, err = buscarPorValor(db, "tipotransporte", "Id", Aux2, "typeTransport")
+
+		if err != nil {
+			return
+		}
+
+		envio2.TipoTransporteId = id
+
+		envios = append(envios, envio2)
 	}
 
 	// Cargar la plantilla HTML
@@ -368,4 +390,48 @@ func getUsers(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
+}
+
+func validateFields(user cliente, packa envio) error {
+	if user.name == "" {
+		return fmt.Errorf("El campo 'name' es requerido")
+	}
+
+	if user.ident == "" {
+		return fmt.Errorf("El campo 'identidad' es requerido")
+	}
+
+	if packa.TypeProduct == "" {
+		return fmt.Errorf("El campo 'tipo de producto ' es requerido")
+	}
+
+	if packa.Amount == "" {
+		return fmt.Errorf("El campo 'cantidad' es requerido")
+	}
+
+	if packa.RegistrationDate == "" {
+		return fmt.Errorf("El campo 'fecha de registro' es requerido")
+	}
+
+	if packa.DateDelivery == "" {
+		return fmt.Errorf("El campo 'fecha de entrega' es requerido")
+	}
+
+	if packa.Store == "" {
+		return fmt.Errorf("El campo 'bodega' es requerido")
+	}
+
+	if packa.Price == "" {
+		return fmt.Errorf("El campo 'bodega' es requerido")
+	}
+
+	if packa.VehicleIdentifier == "" {
+		return fmt.Errorf("El campo 'identificador del vehiculo' es requerido")
+	}
+
+	if packa.GuideNumber == "" {
+		return fmt.Errorf("El campo 'numero de guia' es requerido")
+	}
+
+	return nil
 }
